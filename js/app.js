@@ -1,12 +1,41 @@
-/* Treehouse FSJS Techdegree
- * Project 4 - OOP Game App
- * app.js */
+// Variables
+const game = new Game();
+const startButton = document.getElementById('btn__reset');
+const keyboard = document.getElementById('qwerty');
+const keyButtons = document.getElementsByClassName('key');
 
- let game;
- const startGameButton = document.getElementById('btn__reset');
+// Function to remove start screen overlay
+    function resetDisplay() {
+        const startScreen = document.getElementById('overlay');
+        startScreen.style.display = 'none';
+    };
 
- // Listens for the start button  
- startGameButton.addEventListener('click',function () {
-     game = new Game;
-     game.startGame();
- })
+// Funtion to add keyboard functionality to the game
+    document.addEventListener('keypress', (e) => {
+        const keyName = e.key;
+        for (let i = 0; i < keyButtons.length; i ++)  {
+            if (keyName === keyButtons[i].textContent && keyButtons[i].disabled !== true){
+                markButton(keyButtons[i]);
+            }
+        }
+    });
+
+// Adds click event listener to all the on screen keyboard buttons
+    for (let i = 0; i < keyButtons.length; i ++) {
+            keyButtons[i].addEventListener('click', () => {
+                markButton(keyButtons[i]);
+            });
+        };
+
+// Disables key selected and changes the color of the on screen key.
+    function markButton(button) {
+        game.handleInteraction(button);
+        button.className += ' chosen';
+        button.disabled = true;
+    }
+
+// Adds event listener to start game button to remove the overlay and set the game up.
+    startButton.addEventListener('click',() => {
+        resetDisplay();
+        game.startGame();
+    });
