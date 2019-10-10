@@ -38,7 +38,9 @@ class Game {
             this.checkForWin(this.hits);
             }; 
         } else {
-           this.removeLife();
+            button.className += ' wrong';
+            button.disabled = true; 
+            this.removeLife();
         }
     };
 
