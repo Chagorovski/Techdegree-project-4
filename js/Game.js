@@ -11,7 +11,8 @@ class Game {
             "I was born ready",
             "Just do it",
             "Run forrest run",
-            "What a lovely day" ];
+            "What a lovely day",
+            "The world is yours" ];
     };
 
 /**
