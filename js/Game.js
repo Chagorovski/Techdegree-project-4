@@ -41,7 +41,6 @@ class Game {
 */
     startGame() {
         const overlay = document.getElementById('overlay');
-
         overlay.style.display = 'none';
         overlay.classList.remove('start');   
         this.activePhrase = this.getRandomPhrase();
@@ -49,10 +48,21 @@ class Game {
         return phrase;
     };  
     
-// Adding user interactions.
+// Function that checks is the corect key pressed or else it removes a life
 
-    handleInteraction() {
+    handleInteraction(pressedButton) {
+        let letter = pressedButton.innerHTML;
+        this.activePhrase.checkLetter(letter);
+        pressedButton.setAttribute('disabled','');
 
+        if (this.activePhrase.checkLetter(letter)) {
+            pressedButton.classList.add('chosen');
+            this.activePhrase.showMatchedLetter(letter);
+            this.checkForWin();
+        } else {
+            pressedButton.classList.add('wrong');
+            this.removeLife();
+        };
     }
 
 /**
