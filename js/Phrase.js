@@ -1,45 +1,60 @@
+/* Treehouse FSJS Techdegree
+ * Project 4 - OOP Game App
+ * Phrase.js 
+ */
+
 class Phrase {
-    constructor(phrase){
-        this.phrase = phrase.toLowerCase();
+    constructor(phrase) {
+     //convert phrase to lowercase and used regex to make empty placeholder
+     this.phrase = phrase.toLowerCase().replace(/[^\w\s]/g, "");
     };
-    
+ 
 /**
-* Display phrase on game board
-*/
+ *  Display phrase-placeholder on game board
+ */
     addPhraseToDisplay() {
-        const phraseLetters = this.phrase.split('');
-        phraseLetters.map(letter => {
-            const div = document.getElementById('phrase');
-            const ul = div.firstElementChild;
-            const li = document.createElement('li');
-            
-            if (letter !== ' ') {
-                li.className = `hide letter ${letter}`;
-            } else {
-                li.className = "hide space";
-            }
-            li.textContent = letter.toUpperCase();
-            ul.appendChild(li);
-        });    
+      const phraseLetters = [...this.phrase];
+      const phraseDiv = document.querySelector('#phrase');
+      const phraseUl = phraseDiv.querySelector('ul');
+ 
+      phraseLetters.forEach(phraseLetter => {
+       const phraseLi = document.createElement('li');
+       phraseLetter = phraseLetter.toUpperCase();
+       phraseLi.innerHTML = phraseLetter;
+       if(phraseLi.innerHTML != ' ') {
+         phraseLi.className += "hide";
+         phraseLi.className += " letter ";
+         phraseLi.className += phraseLetter;
+       } else {
+         phraseLi.className += "space";
+       }
+       phraseUl.appendChild(phraseLi);
+     })
     };
-
-/**
-* Checks if passed letter is in phrase
-* @param (string) letter - Letter to check
-*/
-    checkLetter(selectedLetter) {
-        if (this.phrase.includes(selectedLetter)) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-/**
-* Displays passed letter on screen after a match is found
-* @param (string) letter - Letter to display
-*/
-    showMatchedLetter(li) {
-        li.className += ' show';
-    };
-};
+ 
+/** 
+ *  Adds letter placeholders for phrase to the display
+ *  @params {string} char - character input by user
+ */
+    checkLetter(inputLetter) {
+     if(this.phrase.includes(inputLetter)) {
+       return true;
+     } else {
+       return false;
+     }
+   };
+ 
+/** 
+ *  Displays matched letter if check letter returns match remove hidden class of letter
+ *  @params {string} char - character input by user
+ */
+    showMatchedLetter(inputLetter) {
+      const phraseLis= document.querySelectorAll("#phrase li");
+       phraseLis.forEach(li => {
+         if(li.textContent === inputLetter.toUpperCase()) {
+          li.className -= "hide";
+          li.className += " show";
+         }
+       })
+     };
+  };
