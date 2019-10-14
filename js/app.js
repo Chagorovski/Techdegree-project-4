@@ -1,41 +1,45 @@
-// Variables
+/* Treehouse FSJS Techdegree
+ * Project 4 - OOP Game App
+ * app.js 
+ */
+
+// Variable that calls the Game object
 const game = new Game();
-const startButton = document.getElementById('btn__reset');
-const keyboard = document.getElementById('qwerty');
-const keyButtons = document.getElementsByClassName('key');
+// Variable that calls the Audio object
+var audio = new Audio('../sound/ice-flow-by-kevin-macleod.mp3');
 
-// Function to remove start screen overlay
-    function resetDisplay() {
-        const startScreen = document.getElementById('overlay');
-        startScreen.style.display = 'none';
-    };
+// Event for "Play Again" button
+document.querySelector("#btn__reset").addEventListener( "click", () => {
+   game.startGame();
+   checkbox.checked = false;
+   audio.pause();
+});
 
-// Funtion to add keyboard functionality to the game
-    document.addEventListener('keypress', (e) => {
-        const keyName = e.key;
-        for (let i = 0; i < keyButtons.length; i ++)  {
-            if (keyName === keyButtons[i].textContent && keyButtons[i].disabled !== true){
-                markButton(keyButtons[i]);
-            }
-        }
-    });
+// Event for mouse-click and keyboard press
+document.querySelector("#qwerty").addEventListener("click", game.handleInteraction);
+document.addEventListener("keydown", game.handleInteraction);
 
-// Adds click event listener to all the on screen keyboard buttons
-    for (let i = 0; i < keyButtons.length; i ++) {
-            keyButtons[i].addEventListener('click', () => {
-                markButton(keyButtons[i]);
-            });
-        };
+// Adding the flipswitch to the HTML with jQuery
+$(`<div class="flipswitch">
+      <input type="checkbox" name="flipswitch" class="flipswitch-cb" id="fs">
+      <label class="flipswitch-label" for="fs">
+            <div class="flipswitch-inner"></div>
+            <div class="flipswitch-switch"></div>
+      </label>
+   </div>`).insertBefore('.main-container');
 
-// Disables key selected and changes the color of the on screen key.
-    function markButton(button) {
-        game.handleInteraction(button);
-        button.className += ' chosen';
-        button.disabled = true;
-    }
+// Variable to select the audio switch
+var checkbox = document.querySelector('input[type="checkbox"]');
 
-// Adds event listener to start game button to remove the overlay and set the game up.
-    startButton.addEventListener('click',() => {
-        resetDisplay();
-        game.startGame();
-    });
+// ON/OFF for the audio switch
+checkbox.addEventListener('change', function () {
+      if(checkbox.checked) { 
+         audio.play();
+         audio.volume = 0.7;
+      } else {
+         audio.pause();
+         audio.currentTime = 0;
+      }
+});
+  
+
