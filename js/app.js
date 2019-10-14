@@ -6,7 +6,7 @@
 // Variable that calls the Game object
 const game = new Game();
 // Variable that calls the Audio object
-var audio = new Audio('../sound/ice-flow-by-kevin-macleod.mp3');
+var audio = new Audio('../sound/ice-flow-by-kevin-macleod.ogg');
 
 // Event for "Play Again" button
 document.querySelector("#btn__reset").addEventListener( "click", () => {
