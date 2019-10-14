@@ -1,127 +1,161 @@
-// Global variables
-const hearts = document.getElementsByClassName('tries');
-let newPhrase = {};
+/* Treehouse FSJS Techdegree
+ * Project 4 - OOP Game App
+ * Game.js 
+ */
 
-class Game {
+ // Global variable for the main overlay
+ const overlay = document.getElementById('overlay');
+
+ class Game {
     constructor() {
-        this.hits = 0;
-        this.misses = 0;
-        this.phrases = [
-            "Show me the money",
-            "I was born ready",
-            "Just do it",
-            "Run forrest run",
-            "What a lovely day",
-            "The world is yours" ];
+     this.missed = 0;
+     this.activePhrase = null;
+     this.phrases = [
+        this.addPhrase("Show me the money"),
+        this.addPhrase("I was born ready"),
+        this.addPhrase("Just do it"),
+        this.addPhrase("Run forrest run"),
+        this.addPhrase("What a lovely day"),
+        this.addPhrase("The world is yours")
+     ];
     };
 
 /**
-* Selects random phrase from phrases property
-* and return {Object} Phrase object chosen to be used
-*/
+ * Add phrase function
+ * Quick function to add new prase that accepts one parametar
+ * @param {object} phrase 
+ */
+    addPhrase (phrase) {
+      return new Phrase(phrase);
+    };
+ 
+/**
+ * Begins game by hiding overly page,animating the header, 
+ * selecting a random phrase and displaying it to user
+ */
+    startGame() {   
+      overlay.style.display = 'none';
+      const header = document.querySelector(".header");
+      header.className ="";
+      header.className += "header animate-pop-in";
+      this.activePhrase = new Phrase(this.getRandomPhrase());
+      return this.activePhrase.addPhraseToDisplay();
+    }
+ 
+/**
+ * Selects random phrase from phrases property
+ * @return {Object} Phrase object chosen to be used
+ */
     getRandomPhrase() {
-        const random = Math.floor(Math.random() * (this.phrases.length));
-        return this.phrases[random];  
-    };
-
+      let randomIndex= Math.floor(Math.random()*(this.phrases.length));
+      return this.phrases[randomIndex].phrase; 
+    }
+ 
 /**
-* Handles game interactions by selecting 
-* listening to screen kyw clicks and checks for win or remove a life
-*/  
-    handleInteraction(button) {
-        const lis = document.getElementsByClassName(button.textContent);
-
-        if (newPhrase.checkLetter(button.textContent)) {
-            for (let i = 0; i < lis.length; i++) {
-            newPhrase.showMatchedLetter(lis[i]);
-            this.hits += 1;
-            this.checkForWin(this.hits);
-            }; 
+ * Handles user interaction with the game. 
+ * Checks if key is pressed or clicked ,adds the classes "wrong" and "chosen".
+ * If player makes wrong choise life is removed else letter is shown. 
+ * @param {object} event  - event listener object
+ */
+    handleInteraction(event) {
+      if(event.target.className === "key") {
+        const keyButton = event.target;
+        keyButton.setAttribute("disabled", true);
+        if(game.activePhrase.checkLetter(keyButton.textContent) === false) {
+          keyButton.className += " wrong";
+          return game.removeLife();
         } else {
-            button.className += ' wrong';
-            button.disabled = true; 
-            this.removeLife();
+          keyButton.className += " chosen";
+          game.activePhrase.showMatchedLetter(keyButton.textContent);
+          if(game.checkForWin() === true){
+            return game.gameOver()
+          };
         }
+      } else {
+        const pressedKey = (event.key);
+        const keyboard = document.querySelectorAll( "#qwerty button");
+        keyboard.forEach(key => {
+          if(key.innerHTML === pressedKey) {
+            key.setAttribute("disabled", true);
+            if(game.activePhrase.checkLetter(pressedKey) === false) {
+              key.className += " wrong";
+              return game.removeLife();
+            } else {
+              key.className += " chosen";
+              game.activePhrase.showMatchedLetter(pressedKey);
+              if(game.checkForWin() === true) {
+                return game.gameOver();
+              }
+            }
+          }
+        })
+      }
     };
-
+ 
 /**
-* Increases the value of the missed property
-* Removes a life from the scoreboard
-* Checks if player has remaining lives and ends game if player is out
-*/
+ * Increases the value of the missed property
+ * Removes a life from the scoreboard
+ * Checks if player has remaining lives and ends game if player is out.
+ */
     removeLife() {
-        hearts[this.misses].style.display = 'none';
-        this.misses += 1;
-
-        if (this.misses === 5) {
-           this.gameOver('lose');
-        }            
+     const lifeHearts = document.querySelectorAll(".tries img");
+     lifeHearts[this.missed].src = "images/lostHeart.png";
+ 
+     this.missed += 1;
+     if(this.missed === 5) {
+       return game.gameOver();
+     }
     };
-
+ 
 /**
-* Checks for winning move
-* and return {boolean} True if game has been won, false if game wasn't won
-*/
-    checkForWin(hits) {
-        const letters = newPhrase.phrase.split('');
-        const letterLength = letters.filter(letter => letter !== ' ').length;
-        
-        if (hits === letterLength) {
-           this.gameOver('win');
-        }
+ * Checks for winning move
+ * @return {boolean} True if game has been won, false if game wasn't won
+ */
+    checkForWin() {
+      let hideList = document.querySelectorAll(".hide");
+      if(hideList.length === 0){
+        return true
+      } else {
+        return false;
+      }
     };
-
-// Style for start-screen,game-over-msg and reset-button.
-    styleOverlay(winOrLose, message, btnClass, btnMessage){
-        const startScreen = document.getElementById('overlay');
-        startScreen.className = winOrLose;
-        startScreen.style.display = '';
-
-        const gameOverMessage = document.getElementById('game-over-message');
-        gameOverMessage.className = winOrLose;
-        gameOverMessage.textContent = message;
-
-        const resetButton = document.getElementById('btn__reset');
-        resetButton.className = btnClass;
-        resetButton.textContent = btnMessage;
-    };
-
+ 
 /**
-* Displays game over message
-* Whether or not the user won the game
-*/
-    gameOver(winOrLose) {
+ * Displays the original start screen overlay, and
+ * depending on the outcome of the game, updates the overlay `h1` element with a
+ * friendly win or loss message, and replaces the overlay’s `start` CSS class with
+ * either the `win` or `lose` CSS class.
+ */
+    gameOver() {
+      const gameOverMsg = document.querySelector('#game-over-message');
+      const gameBtn = document.querySelector('#btn__reset');
+      const header = document.querySelector(".header");
+      header.className = "";
+      header.className += "header animate-pop-out";
+    
+      if(this.missed === 5) {
+        gameOverMsg.textContent = "Nice try, loosing is part of the game";
+        overlay.className = "lose animate-pop-in";
+      } else {
+        gameOverMsg.textContent = "We have a WINNER !";
+        overlay.className = "win animate-pop-in";
+      }
 
-        if (winOrLose === 'lose'){
-            this.styleOverlay(winOrLose, 'YOU LOSE!', 'lose-button', 'Try Again');
-        } else if (winOrLose === 'win'){
-            this.styleOverlay(winOrLose, 'YOU WIN!', 'win-button', 'Play Again');
-        }
-    };
-
-/**
-* Begins game by selecting a random phrase and displaying it to user
-*/
-    startGame() {
-        this.misses = 0;
-        this.hits = 0;
-
-        const phraseDiv = document.getElementById('phrase');
-        const phraseUl = phraseDiv.firstElementChild;
-        phraseUl.innerHTML = '';
-
-        const letterKeys = document.getElementsByClassName('key');
-        for(let i = 0; i < letterKeys.length; i ++) {
-            letterKeys[i].disabled = '';
-            letterKeys[i].className = 'key';
-        }
-
-        for(let j = 0; j < hearts.length; j ++) {
-            hearts[j].style.display = '';
-        }
-
-        newPhrase = new Phrase(this.getRandomPhrase());
-        newPhrase.addPhraseToDisplay();
-        return newPhrase;
-    };
-};
+      gameBtn.textContent = "Play Again";
+      overlay.style.display = 'block';
+  
+      this.missed = 0;
+      this.activePhrase = null;
+      const phraseUl = document.querySelector("ul");
+      phraseUl.innerHTML = "";
+      const keys = document.querySelectorAll(".key");
+      keys.forEach(key => {
+        key.className = "key";
+        key.removeAttribute("disabled");
+      })
+      const lifeHearts = document.querySelectorAll(".tries img");
+      lifeHearts.forEach(lifeHeart => {
+        lifeHeart.src = "images/liveHeart.png";
+      })
+      };
+  };
