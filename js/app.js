@@ -6,7 +6,7 @@
 // Variable that calls the Game object
 const game = new Game();
 // Variable that calls the Audio object
-var audio = new Audio('https://raw.githack.com/Chagorovski/Techdegree-project-4/master/sound/ice-flow-by-kevin-macleod.ogg');
+var audio = new Audio('../sound/ice-flow.mp3');
 
 // Event for "Play Again" button
 document.querySelector("#btn__reset").addEventListener( "click", () => {
@@ -35,7 +35,7 @@ var checkbox = document.querySelector('input[type="checkbox"]');
 checkbox.addEventListener('change', function () {
       if(checkbox.checked) { 
          audio.play();
-         audio.volume = 0.7;
+         audio.volume = 0.3;
       } else {
          audio.pause();
          audio.currentTime = 0;
