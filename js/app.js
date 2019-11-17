@@ -17,7 +17,7 @@ document.querySelector("#btn__reset").addEventListener( "click", () => {
 
 // Event for mouse-click and keyboard press
 document.querySelector("#qwerty").addEventListener("click", game.handleInteraction);
-document.addEventListener("keydown", game.handleInteraction);
+document.addEventListener("keypress", game.handleInteraction);
 
 // Adding the flipswitch to the HTML with jQuery
 $(`<div class="flipswitch">
