@@ -1,12 +1,5 @@
-/* Treehouse FSJS Techdegree
- * Project 4 - OOP Game App
- * app.js 
- */
-
-// Variable that calls the Game object
 const game = new Game();
-// Variable that calls the Audio object
-var audio = new Audio('../sound/ice-flow.mp3');
+var audio = document.getElementById('sound');
 
 // Event for "Play Again" button
 document.querySelector("#btn__reset").addEventListener( "click", () => {
@@ -33,13 +26,11 @@ var checkbox = document.querySelector('input[type="checkbox"]');
 
 // ON/OFF for the audio switch
 checkbox.addEventListener('change', function () {
-      if(checkbox.checked) { 
-         audio.play();
-         audio.volume = 0.3;
-      } else {
-         audio.pause();
-         audio.currentTime = 0;
-      }
+   if(checkbox.checked) { 
+      audio.play();
+      audio.volume = 0.4;
+   } else {
+      audio.pause();
+      audio.currentTime = 0;
+   }
 });
-  
-
