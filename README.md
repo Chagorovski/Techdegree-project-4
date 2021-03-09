@@ -1,7 +1,6 @@
-# Tech Degree Project 4
-
 ## Phrase Hunter
 
+![](/images/phrase-hunter-gif.gif)
 - Using JavaScript-OOP I have created a browser-based, word guessing game.
 - This game contains three main files
    - Game.js
